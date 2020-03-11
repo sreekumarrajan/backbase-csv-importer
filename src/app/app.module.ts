@@ -3,6 +3,9 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CsvImportComponent } from './pages/csv-import/csv-import.component';
+import {CsvImportModule} from './pages/csv-import/csv-import.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -10,7 +13,9 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    CsvImportModule,
+    NoopAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

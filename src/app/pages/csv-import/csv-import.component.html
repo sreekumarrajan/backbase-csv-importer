@@ -1,0 +1,36 @@
+<input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
+
+<table *ngIf="currentSelectionOfRecords && currentSelectionOfRecords.length > 0"
+       mat-table
+       [dataSource]="currentSelectionOfRecords"
+       matSort
+       (matSortChange)="sortData($event)"
+       class="mat-elevation-z8">
+  <ng-container matColumnDef="firstName">
+    <th mat-header-cell *matHeaderCellDef
+    mat-sort-header="firstName"> First Name </th>
+    <td mat-cell *matCellDef="let record"> {{record.firstName}} </td>
+  </ng-container>
+  <ng-container matColumnDef="surName">
+    <th mat-header-cell *matHeaderCellDef
+        mat-sort-header="surName"> Sur Name </th>
+    <td mat-cell *matCellDef="let record"> {{record.surName}} </td>
+  </ng-container>
+  <ng-container matColumnDef="issueCount">
+    <th mat-header-cell *matHeaderCellDef
+        mat-sort-header="issueCount"> Issue Count </th>
+    <td mat-cell *matCellDef="let record"> {{record.issueCount}} </td>
+  </ng-container>
+  <ng-container matColumnDef="dateOfBirth">
+    <th mat-header-cell *matHeaderCellDef
+        mat-sort-header="dateOfBirth"> Date Of Birth </th>
+    <td mat-cell *matCellDef="let record"> {{record.dateOfBirth}} </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let myRowData; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [length]="records.length"
+               [pageSize]="pageSize"
+               (page)="onPagination($event)"
+               #paginator>
+</mat-paginator>
