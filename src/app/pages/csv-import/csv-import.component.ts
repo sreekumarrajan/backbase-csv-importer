@@ -3,6 +3,7 @@ import {BackbaseCSVRecord} from '../../common/models/csv.model';
 import {environment} from '../../../environments/environment';
 import {PageEvent} from '@angular/material/paginator';
 import {MatPaginator, Sort} from '@angular/material';
+import {FormControl, Validators} from '@angular/forms';
 
 @Component({
   selector: 'backbase-csv-import',
@@ -19,8 +20,11 @@ export class CsvImportComponent implements OnInit {
   public displayedColumns: string[] = ['firstName', 'surName', 'issueCount', 'dateOfBirth'];
   public pageSize: number = environment.tableConfiguration.pageSize;
   @ViewChild('paginator') paginator: MatPaginator;
+  public issueCountFilter: FormControl;
+  public filterActive: boolean = false;
 
   ngOnInit() {
+    this.issueCountFilter = new FormControl('', [Validators.pattern('^([0-9]*)|([0-9]*\\s-\\s[0-9]*)$')]);
   }
 
   uploadListener($event: any): void {
@@ -94,7 +98,7 @@ export class CsvImportComponent implements OnInit {
 
   sortData(sort: Sort) {
     this.paginator.pageIndex = 0;
-    const data = this.records.slice();
+    const data = this.filterActive ? this.sortedRecords.slice() : this.records.slice();
     if (!sort.active || sort.direction === '') {
       this.sortedRecords = data;
       this.currentSelectionOfRecords = this.sortedRecords.slice(0, environment.tableConfiguration.pageSize - 1);
@@ -124,6 +128,38 @@ export class CsvImportComponent implements OnInit {
     const endingOffset = startingOffset + environment.tableConfiguration.pageSize - 1;
     // reset sorted data
     this.currentSelectionOfRecords = this.sortedRecords.slice(startingOffset, endingOffset);
+  }
+
+  filterRecords() {
+    this.filterActive = true;
+    if (this.issueCountFilter.invalid) {
+      // handle error
+    } else {
+      this.paginator.pageIndex = 0;
+      const filterValue = this.issueCountFilter.value
+        .split('-')
+        .map(entry => entry.trim());
+      switch (filterValue.length) {
+        case 1:
+          this.sortedRecords = this.records.filter(record => record.issueCount === filterValue[0]);
+          break;
+        case 2:
+          this.sortedRecords = this.records.filter(record => record.issueCount >= filterValue[0]
+                                                                          && record.issueCount <= filterValue[1]);
+          break;
+        default:
+          break;
+      }
+      this.currentSelectionOfRecords = this.sortedRecords.slice(0, environment.tableConfiguration.pageSize - 1);
+    }
+
+  }
+
+  resetFilterRecords() {
+    this.filterActive = false;
+    this.paginator.pageIndex = 0;
+    this.sortedRecords = this.records;
+    this.currentSelectionOfRecords = this.sortedRecords.slice(0, environment.tableConfiguration.pageSize - 1);
   }
 }
 

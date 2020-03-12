@@ -4,7 +4,9 @@ import {CsvImportComponent} from './csv-import.component';
 import {CsvImportRoutingModule} from './csv-import.routing.module';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {CdkTableModule} from '@angular/cdk/table';
-import {MatSortModule, MatTableModule} from '@angular/material';
+import {MatButtonModule, MatFormFieldModule, MatInputModule, MatSortModule, MatTableModule} from '@angular/material';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [CsvImportComponent],
@@ -14,7 +16,12 @@ import {MatSortModule, MatTableModule} from '@angular/material';
     MatPaginatorModule,
     CdkTableModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule
   ]
 })
 export class CsvImportModule { }

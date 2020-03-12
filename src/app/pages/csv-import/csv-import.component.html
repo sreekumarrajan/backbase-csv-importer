@@ -1,5 +1,23 @@
-<input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
-
+<div class="issue-count-filter-container">
+  <div>
+    <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
+  </div>
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>Filter on issue count</mat-label>
+      <input matInput #input maxlength="10" placeholder="Eg: 2 or 2 - 45" [formControl]="issueCountFilter">
+      <mat-error *ngIf="issueCountFilter.invalid">Please enter in correct format</mat-error>
+    </mat-form-field>
+    <button class="button"
+            mat-button
+            (click)="filterRecords()"
+            *ngIf="issueCountFilter.valid">Filter</button>
+    <button class="button"
+            mat-button
+            (click)="resetFilterRecords()"
+            *ngIf="issueCountFilter.valid">Reset Filter</button>
+  </div>
+</div>
 <table *ngIf="currentSelectionOfRecords && currentSelectionOfRecords.length > 0"
        mat-table
        [dataSource]="currentSelectionOfRecords"
