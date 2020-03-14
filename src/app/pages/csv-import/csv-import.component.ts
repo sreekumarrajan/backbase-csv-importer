@@ -22,13 +22,22 @@ export class CsvImportComponent implements OnInit {
   public pageSize: number = environment.tableConfiguration.pageSize;
   @ViewChild('paginator') paginator: MatPaginator;
   public issueCountFilter: FormControl;
-  public filterActive: boolean = false;
+  public filterActive = false;
 
   constructor(public csvUtilsService: CsvUtilsService) {
   }
 
   ngOnInit() {
     this.issueCountFilter = new FormControl('', [Validators.pattern('^([0-9]*)|([0-9]*\\s-\\s[0-9]*)$')]);
+
+    this.csvUtilsService.headersRowObservable.subscribe((headersRow) => {
+      this.headersRow = headersRow;
+    });
+    this.csvUtilsService.csvRecordsObservable.subscribe(records => {
+      this.records = records;
+      this.sortedRecords = records;
+      this.currentSelectionOfRecords = this.records.slice(0, environment.tableConfiguration.pageSize - 1);
+    }, error => console.log(error));
   }
 
   uploadListener($event: any): void {
@@ -37,24 +46,8 @@ export class CsvImportComponent implements OnInit {
     if (this.csvUtilsService.isValidCSVFile(files[0])) {
 
       const input = $event.target;
-      const reader = new FileReader();
-      reader.readAsText(input.files[0]);
 
-      reader.onload = () => {
-        const csvData = reader.result;
-        const csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
-
-        this.headersRow = this.csvUtilsService.getHeaderArray(csvRecordsArray);
-
-        this.records = this.csvUtilsService.getDataRecordsArrayFromCSVFile(csvRecordsArray, this.headersRow.length);
-        this.sortedRecords = this.records;
-        this.currentSelectionOfRecords = this.records.slice(0, environment.tableConfiguration.pageSize - 1);
-      };
-
-      reader.onerror = function () {
-        console.log('error is occured while reading file!');
-      };
-
+      this.csvUtilsService.processCSVFile(input);
     } else {
         alert('Please import valid .csv file.');
       this.fileReset();
