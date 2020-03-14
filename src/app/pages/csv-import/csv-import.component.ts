@@ -23,6 +23,7 @@ export class CsvImportComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   public issueCountFilter: FormControl;
   public filterActive = false;
+  public csvFileSelected = false;
 
   constructor(public csvUtilsService: CsvUtilsService) {
   }
@@ -34,6 +35,7 @@ export class CsvImportComponent implements OnInit {
       this.headersRow = headersRow;
     });
     this.csvUtilsService.csvRecordsObservable.subscribe(records => {
+      this.csvFileSelected = true;
       this.records = records;
       this.sortedRecords = records;
       this.currentSelectionOfRecords = this.records.slice(0, environment.tableConfiguration.pageSize - 1);

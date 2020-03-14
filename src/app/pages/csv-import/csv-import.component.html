@@ -1,56 +1,66 @@
-<div class="issue-count-filter-container">
-  <div>
-    <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
+<ng-container *ngIf="!csvFileSelected">
+  <mat-card class="file-selection-container">
+    <div class="file-selection-text">
+      Please select a csv file to import.
+    </div>
+    <div>
+      <input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
+    </div>
+  </mat-card>
+</ng-container>
+<ng-container *ngIf="csvFileSelected">
+  <div class="issue-count-filter-container">
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Filter on issue count</mat-label>
+        <input matInput #input maxlength="10" placeholder="Eg: 2 or 2 - 45" [formControl]="issueCountFilter">
+        <mat-error *ngIf="issueCountFilter.invalid">Please enter in correct format</mat-error>
+      </mat-form-field>
+      <button class="button"
+              mat-button
+              (click)="filterRecords()"
+              *ngIf="issueCountFilter.valid">Filter</button>
+      <button class="button"
+              mat-button
+              (click)="resetFilterRecords()"
+              *ngIf="issueCountFilter.valid">Reset Filter</button>
+    </div>
   </div>
-  <div>
-    <mat-form-field appearance="fill">
-      <mat-label>Filter on issue count</mat-label>
-      <input matInput #input maxlength="10" placeholder="Eg: 2 or 2 - 45" [formControl]="issueCountFilter">
-      <mat-error *ngIf="issueCountFilter.invalid">Please enter in correct format</mat-error>
-    </mat-form-field>
-    <button class="button"
-            mat-button
-            (click)="filterRecords()"
-            *ngIf="issueCountFilter.valid">Filter</button>
-    <button class="button"
-            mat-button
-            (click)="resetFilterRecords()"
-            *ngIf="issueCountFilter.valid">Reset Filter</button>
-  </div>
-</div>
-<table *ngIf="currentSelectionOfRecords && currentSelectionOfRecords.length > 0"
-       mat-table
-       [dataSource]="currentSelectionOfRecords"
-       matSort
-       (matSortChange)="sortData($event)"
-       class="mat-elevation-z8">
-  <ng-container matColumnDef="firstName">
-    <th mat-header-cell *matHeaderCellDef
-    mat-sort-header="firstName"> First Name </th>
-    <td mat-cell *matCellDef="let record"> {{record.firstName}} </td>
-  </ng-container>
-  <ng-container matColumnDef="surName">
-    <th mat-header-cell *matHeaderCellDef
-        mat-sort-header="surName"> Sur Name </th>
-    <td mat-cell *matCellDef="let record"> {{record.surName}} </td>
-  </ng-container>
-  <ng-container matColumnDef="issueCount">
-    <th mat-header-cell *matHeaderCellDef
-        mat-sort-header="issueCount"> Issue Count </th>
-    <td mat-cell *matCellDef="let record"> {{record.issueCount}} </td>
-  </ng-container>
-  <ng-container matColumnDef="dateOfBirth">
-    <th mat-header-cell *matHeaderCellDef
-        mat-sort-header="dateOfBirth"> Date Of Birth </th>
-    <td mat-cell *matCellDef="let record"> {{record.dateOfBirth}} </td>
-  </ng-container>
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let myRowData; columns: displayedColumns;"></tr>
-</table>
-<mat-paginator
-  *ngIf="currentSelectionOfRecords && currentSelectionOfRecords.length > 0"
-  [length]="records.length"
-  [pageSize]="pageSize"
-  (page)="onPagination($event)"
-  #paginator>
-</mat-paginator>
+  <table *ngIf="currentSelectionOfRecords && currentSelectionOfRecords.length > 0"
+         mat-table
+         [dataSource]="currentSelectionOfRecords"
+         matSort
+         (matSortChange)="sortData($event)"
+         class="mat-elevation-z8">
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef
+          mat-sort-header="firstName"> First Name </th>
+      <td mat-cell *matCellDef="let record"> {{record.firstName}} </td>
+    </ng-container>
+    <ng-container matColumnDef="surName">
+      <th mat-header-cell *matHeaderCellDef
+          mat-sort-header="surName"> Sur Name </th>
+      <td mat-cell *matCellDef="let record"> {{record.surName}} </td>
+    </ng-container>
+    <ng-container matColumnDef="issueCount">
+      <th mat-header-cell *matHeaderCellDef
+          mat-sort-header="issueCount"> Issue Count </th>
+      <td mat-cell *matCellDef="let record"> {{record.issueCount}} </td>
+    </ng-container>
+    <ng-container matColumnDef="dateOfBirth">
+      <th mat-header-cell *matHeaderCellDef
+          mat-sort-header="dateOfBirth"> Date Of Birth </th>
+      <td mat-cell *matCellDef="let record"> {{record.dateOfBirth}} </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let myRowData; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator
+    *ngIf="currentSelectionOfRecords && currentSelectionOfRecords.length > 0"
+    [length]="records.length"
+    [pageSize]="pageSize"
+    (page)="onPagination($event)"
+    #paginator>
+  </mat-paginator>
+</ng-container>
+
