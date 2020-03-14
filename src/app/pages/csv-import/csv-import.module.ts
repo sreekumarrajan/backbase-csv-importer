@@ -7,6 +7,7 @@ import {CdkTableModule} from '@angular/cdk/table';
 import {MatButtonModule, MatFormFieldModule, MatInputModule, MatSortModule, MatTableModule} from '@angular/material';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
+import {CsvUtilsService} from '../../providers/csv_utils/csv-utils.service';
 
 @NgModule({
   declarations: [CsvImportComponent],
@@ -22,6 +23,9 @@ import {MatIconModule} from '@angular/material/icon';
     MatInputModule,
     MatIconModule,
     MatButtonModule
+  ],
+  providers: [
+    CsvUtilsService
   ]
 })
 export class CsvImportModule { }

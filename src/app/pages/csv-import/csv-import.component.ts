@@ -4,6 +4,7 @@ import {environment} from '../../../environments/environment';
 import {PageEvent} from '@angular/material/paginator';
 import {MatPaginator, Sort} from '@angular/material';
 import {FormControl, Validators} from '@angular/forms';
+import {CsvUtilsService} from '../../providers/csv_utils/csv-utils.service';
 
 @Component({
   selector: 'backbase-csv-import',
@@ -23,6 +24,9 @@ export class CsvImportComponent implements OnInit {
   public issueCountFilter: FormControl;
   public filterActive: boolean = false;
 
+  constructor(public csvUtilsService: CsvUtilsService) {
+  }
+
   ngOnInit() {
     this.issueCountFilter = new FormControl('', [Validators.pattern('^([0-9]*)|([0-9]*\\s-\\s[0-9]*)$')]);
   }
@@ -30,7 +34,7 @@ export class CsvImportComponent implements OnInit {
   uploadListener($event: any): void {
     const files = $event.srcElement.files;
 
-    if (this.isValidCSVFile(files[0])) {
+    if (this.csvUtilsService.isValidCSVFile(files[0])) {
 
       const input = $event.target;
       const reader = new FileReader();
@@ -40,9 +44,9 @@ export class CsvImportComponent implements OnInit {
         const csvData = reader.result;
         const csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
 
-        this.headersRow = this.getHeaderArray(csvRecordsArray);
+        this.headersRow = this.csvUtilsService.getHeaderArray(csvRecordsArray);
 
-        this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, this.headersRow.length);
+        this.records = this.csvUtilsService.getDataRecordsArrayFromCSVFile(csvRecordsArray, this.headersRow.length);
         this.sortedRecords = this.records;
         this.currentSelectionOfRecords = this.records.slice(0, environment.tableConfiguration.pageSize - 1);
       };
@@ -55,40 +59,6 @@ export class CsvImportComponent implements OnInit {
         alert('Please import valid .csv file.');
       this.fileReset();
     }
-  }
-
-  getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
-    const csvArr = [];
-
-    for (let i = 1; i < csvRecordsArray.length; i++) {
-      const currentRecord = (<string>csvRecordsArray[i]).split(',');
-      if (currentRecord.length === headerLength) {
-        const csvRecord: BackbaseCSVRecord = new BackbaseCSVRecord();
-        csvRecord.firstName = currentRecord[0].trim();
-        csvRecord.surName = currentRecord[1].trim();
-        csvRecord.issueCount = currentRecord[2].trim();
-        csvRecord.dateOfBirth = currentRecord[3].trim();
-        csvArr.push(csvRecord);
-      }
-    }
-    return csvArr;
-  }
-
-  isValidCSVFile(file: any) {
-    return file.name.endsWith('.csv');
-  }
-
-  getHeaderArray(csvRecordsArr: any) {
-    const headers = (<string>csvRecordsArr[0]).split(',');
-    const headerArray = [];
-    for (let j = 0; j < headers.length; j++) {
-      headerArray.push(this.formatHeaders(headers[j]));
-    }
-    return headerArray;
-  }
-
-  formatHeaders(headerField: string) {
-    return headerField;
   }
 
   fileReset() {
