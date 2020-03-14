@@ -47,8 +47,10 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let myRowData; columns: displayedColumns;"></tr>
 </table>
-<mat-paginator [length]="records.length"
-               [pageSize]="pageSize"
-               (page)="onPagination($event)"
-               #paginator>
+<mat-paginator
+  *ngIf="currentSelectionOfRecords && currentSelectionOfRecords.length > 0"
+  [length]="records.length"
+  [pageSize]="pageSize"
+  (page)="onPagination($event)"
+  #paginator>
 </mat-paginator>
