@@ -16,8 +16,8 @@ export class CsvUtilsService {
   constructor() {
     this.headersRowSubject = new Subject();
     this.csvRecordsSubject = new Subject();
-    this.headersRowObservable = this.headersRowSubject as Observable<string[]>;
-    this.csvRecordsObservable = this.csvRecordsSubject as Observable<BackbaseCSVRecord[]>;
+    this.headersRowObservable = this.headersRowSubject.asObservable();
+    this.csvRecordsObservable = this.csvRecordsSubject.asObservable();
   }
 
   isValidCSVFile(file: any): boolean {
