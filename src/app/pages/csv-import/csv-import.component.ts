@@ -2,9 +2,10 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {BackbaseCSVRecord} from '../../common/models/csv.model';
 import {environment} from '../../../environments/environment';
 import {PageEvent} from '@angular/material/paginator';
-import {MatPaginator, Sort} from '@angular/material';
+import {MatDialog, MatPaginator, Sort} from '@angular/material';
 import {FormControl, Validators} from '@angular/forms';
 import {CsvUtilsService} from '../../providers/csv_utils/csv-utils.service';
+import {ErrorDialogComponent} from '../../common/components/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'backbase-csv-import',
@@ -25,7 +26,15 @@ export class CsvImportComponent implements OnInit {
   public filterActive = false;
   public csvFileSelected = false;
 
-  constructor(public csvUtilsService: CsvUtilsService) {
+  constructor(public csvUtilsService: CsvUtilsService,
+              public dialog: MatDialog) {
+  }
+
+  private _handleError(error: string) : void{
+    this.dialog.open(ErrorDialogComponent, {
+      width: '250px',
+      data: {errorMessage: error}
+    });
   }
 
   ngOnInit() {
@@ -39,7 +48,7 @@ export class CsvImportComponent implements OnInit {
       this.records = records;
       this.sortedRecords = records;
       this.currentSelectionOfRecords = this.records.slice(0, environment.tableConfiguration.pageSize - 1);
-    }, error => console.log(error));
+    }, error => this._handleError(error));
   }
 
   uploadListener($event: any): void {

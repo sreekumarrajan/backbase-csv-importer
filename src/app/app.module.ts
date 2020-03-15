@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { CsvImportComponent } from './pages/csv-import/csv-import.component';
 import {CsvImportModule} from './pages/csv-import/csv-import.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ErrorDialogComponent } from './common/components/error-dialog/error-dialog.component';
+import {MatIconModule} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -15,7 +17,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     AppRoutingModule,
     CsvImportModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]
