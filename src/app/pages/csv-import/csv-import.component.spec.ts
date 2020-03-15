@@ -5,7 +5,10 @@ import {CsvUtilsService} from '../../providers/csv_utils/csv-utils.service';
 import {of} from 'rxjs';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
-import {MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSortModule, MatTableModule} from '@angular/material';
+import {
+  MatButtonModule, MatCardModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatSortModule,
+  MatTableModule
+} from '@angular/material';
 import {CommonModule} from '@angular/common';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {CdkTableModule} from '@angular/cdk/table';
@@ -33,7 +36,8 @@ describe('CsvImportComponent', () => {
         MatInputModule,
         MatIconModule,
         MatButtonModule,
-        MatCardModule
+        MatCardModule,
+        MatDialogModule
       ],
       providers: [
         CsvUtilsService
